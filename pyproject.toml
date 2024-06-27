@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "harpia-answer-providers"
+version = "0.1.0"
+description = ""
+authors = ["C4AI - USP"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flask = "^3.0.3"
+colorama = "^0.4.6"
+openai = "^1.35.6"
+overrides = "^7.7.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.4.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
