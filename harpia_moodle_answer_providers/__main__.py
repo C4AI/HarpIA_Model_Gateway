@@ -25,14 +25,23 @@ parser.add_argument(
     help="Path to the configuration file (.py)",
     required=True,
 )
-parser.add_argument("--mode", choices=["server", "cli"], default="server")
-parser.add_argument("--provider", type=str)
+subparsers = parser.add_subparsers(dest="mode", required=True)
+
+server_subparser = subparsers.add_parser("server")
+server_subparser.add_argument("--host", type=str, required=True)
+server_subparser.add_argument("--port", type=int, required=True)
+server_subparser.add_argument("--debug", "-d", action="store_true")
+
+
+cli_subparser = subparsers.add_parser("cli")
+cli_subparser.add_argument("--provider", type=str, required=True)
+
 args = parser.parse_args()
 
 service = AnswerProviderService(args.config)
 match args.mode:
     case "server":
-        service.serve()
+        service.serve(args.host, args.port, args.debug)
     case "cli":
         if not args.provider:
             parser.error("--mode=cli requires --provider")
