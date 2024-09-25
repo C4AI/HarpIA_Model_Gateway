@@ -27,8 +27,8 @@ class OllamaAnswerProvider(BaseAnswerProvider[ParameterSpec]):
             json={"model": self.settings["model"]},
         )
 
-    def answer(self, message: str) -> Response:
-        message_list = self.build_message_list(message)
+    def answer(self, message: str, history: list[str] | None = None) -> Response:
+        message_list = self.build_message_list(message, history or [])
         args = dict(
             **self.settings["extra_ollama_args"],
             model=self.settings["model"],
@@ -43,11 +43,22 @@ class OllamaAnswerProvider(BaseAnswerProvider[ParameterSpec]):
             interaction_id=self.generate_id(),
         )
 
-    def build_message_list(self, message: str) -> list[dict[str, Any]]:
+    def build_message_list(
+        self, message: str, history: list[str]
+    ) -> list[dict[str, Any]]:
         messages = []
         if self.settings["system_prompt"]:
             messages.append(
                 {"role": "system", "content": self.settings["system_prompt"]}
             )
+        from_user = True
+        for message in history:
+            messages.append(
+                {
+                    "role": "user" if from_user else "assistant",
+                    "content": self.settings["system_prompt"],
+                }
+            )
+            from_user = not from_user
         messages.append({"role": "user", "content": message})
         return messages

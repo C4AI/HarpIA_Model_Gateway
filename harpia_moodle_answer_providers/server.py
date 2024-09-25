@@ -39,7 +39,7 @@ class AnswerProviderService:
             the generated answer
         """
         provider = self.providers.get(req.answer_provider)
-        output = provider.answer(req.text)
+        output = provider.answer(req.text, req.history)
         return Response(
             text=output.text,
             contexts=output.contexts,
@@ -60,7 +60,11 @@ class AnswerProviderService:
         @app.route("/send", methods=["POST"])
         def send_message():
             j = request.json
-            req = Request(text=j["query"], answer_provider=j["answer_provider"])
+            req = Request(
+                text=j["query"],
+                answer_provider=j["answer_provider"],
+                history=j.get("history", []),
+            )
             resp = self._send_message(req)
             return jsonify(asdict(resp))
 
@@ -89,7 +93,7 @@ class AnswerProviderService:
                 return
             if not question:
                 continue
-            req = Request(text=question, answer_provider=answer_provider)
+            req = Request(text=question, answer_provider=answer_provider, history=[])
             resp = self._send_message(req)
             print(
                 colorama.Style.RESET_ALL + colorama.Style.BRIGHT + f"\n{resp.text}\n\n"

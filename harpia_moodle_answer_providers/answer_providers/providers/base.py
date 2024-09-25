@@ -12,6 +12,7 @@ from typing import TypeVar, Mapping, Any, Self, Generic
 class Request:
     text: str
     answer_provider: str
+    history: list[str]
 
 
 @dataclass
@@ -69,7 +70,7 @@ class BaseAnswerProvider(Generic[InputT], metaclass=ABCMeta):
         return cls.__subclasses.get(class_name, None)
 
     @abstractmethod
-    def answer(self, message: str) -> Response: ...
+    def answer(self, message: str, history: list[str] | None = None) -> Response: ...
 
     def generate_id(self) -> str:
         fmt = "%Y%m%d_%H%M%S_%f_"

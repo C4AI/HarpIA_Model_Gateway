@@ -18,7 +18,7 @@ class ParameterSpec(TypedDict):
 class ConstantAnswerProvider(BaseAnswerProvider[ParameterSpec]):
 
     @override
-    def answer(self, message: str) -> Response:
+    def answer(self, message: str, history: list[str] | None = None) -> Response:
         answer = self.settings["message"]
         return Response(
             text=answer,

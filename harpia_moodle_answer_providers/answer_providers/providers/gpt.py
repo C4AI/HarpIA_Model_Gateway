@@ -23,8 +23,8 @@ class GPTAnswerProvider(BaseAnswerProvider[ParameterSpec]):
         super().__init__(*args, **kwargs)
         self.client = OpenAI(api_key=self.settings["api_key"])
 
-    def answer(self, message: str) -> Response:
-        message_list = self.build_message_list(message)
+    def answer(self, message: str, history: list[str] | None = None) -> Response:
+        message_list = self.build_message_list(message, history or [])
         args = dict(model=self.settings["model"], messages=message_list, n=1)
         for k in ["temperature", "top_p", "max_tokens"]:
             v = self.settings.get(k, None)
@@ -38,11 +38,22 @@ class GPTAnswerProvider(BaseAnswerProvider[ParameterSpec]):
             interaction_id=self.generate_id(),
         )
 
-    def build_message_list(self, message: str) -> list[ChatCompletionMessageParam]:
+    def build_message_list(
+        self, message: str, history: list[str]
+    ) -> list[ChatCompletionMessageParam]:
         messages: list[ChatCompletionMessageParam] = []
         if self.settings["system_prompt"]:
             messages.append(
                 {"role": "system", "content": self.settings["system_prompt"]}
             )
+        from_user = True
+        for message in history:
+            messages.append(
+                {
+                    "role": "user" if from_user else "assistant",
+                    "content": self.settings["system_prompt"],
+                }
+            )
+            from_user = not from_user
         messages.append({"role": "user", "content": message})
         return messages

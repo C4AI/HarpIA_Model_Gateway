@@ -12,7 +12,7 @@ class ParameterSpec(TypedDict):
 
 class EchoAnswerProvider(BaseAnswerProvider[ParameterSpec]):
 
-    def answer(self, message: str) -> Response:
+    def answer(self, message: str, history: list[str] | None = None) -> Response:
         text = message
         if self.settings["to_uppercase"]:
             text = text.upper()
