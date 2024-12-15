@@ -13,6 +13,7 @@ class Request:
     text: str
     answer_provider: str
     history: list[str]
+    system_prompt: str
 
 
 @dataclass
@@ -69,9 +70,21 @@ class BaseAnswerProvider(Generic[InputT], metaclass=ABCMeta):
         cls.__import_all()
         return cls.__subclasses.get(class_name, None)
 
+    @classmethod
     @abstractmethod
-    def answer(self, message: str, history: list[str] | None = None) -> Response: ...
+    def supports_system_prompt(cls) -> bool: ...
+
+    @abstractmethod
+    def answer(
+        self,
+        message: str,
+        history: list[str] | None = None,
+        custom_system_prompt: str | None = None,
+    ) -> Response: ...
 
     def generate_id(self) -> str:
         fmt = "%Y%m%d_%H%M%S_%f_"
         return datetime.now().strftime(fmt) + str(uuid4()).replace("-", "")
+
+    def get_default_system_prompt(self) -> str:
+        return ""

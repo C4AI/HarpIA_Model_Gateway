@@ -39,7 +39,7 @@ class AnswerProviderService:
             the generated answer
         """
         provider = self.providers.get(req.answer_provider)
-        output = provider.answer(req.text, req.history)
+        output = provider.answer(req.text, req.history, req.system_prompt)
         return Response(
             text=output.text,
             contexts=output.contexts,
@@ -64,13 +64,25 @@ class AnswerProviderService:
                 text=j["query"],
                 answer_provider=j["answer_provider"],
                 history=j.get("history", []),
+                system_prompt=j.get("system_prompt", None),
             )
             resp = self._send_message(req)
             return jsonify(asdict(resp))
 
         @app.route("/list", methods=["GET"])
         def list_providers():
-            return jsonify({"providers": [*self.providers.keys()]})
+            return jsonify(
+                {
+                    "providers": [
+                        {
+                            "name": name,
+                            "supports_system_prompt": provider.supports_system_prompt(),
+                            "default_system_prompt": provider.get_default_system_prompt(),
+                        }
+                        for name, provider in self.providers.items()
+                    ]
+                }
+            )
 
         if debug:
             app.run(host=host, port=port, debug=debug)

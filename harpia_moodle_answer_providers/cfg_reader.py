@@ -2,7 +2,14 @@ from importlib import util as import_util
 from pathlib import Path
 from typing import TypedDict, Protocol
 
-ProviderArgs = TypedDict("ProviderArgs", {"name": str, "class": str})
+ProviderArgs = TypedDict(
+    "ProviderArgs",
+    {
+        "name": str,
+        "class": str,
+        "default_system_prompt": str,
+    },
+)
 
 
 class ConfigProtocol(Protocol):

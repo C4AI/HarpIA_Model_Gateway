@@ -13,3 +13,11 @@ provider backend server for the
 ### Requirements:
 
 - Python &geq; 3.11.
+
+
+### Usage instructions:
+
+- Set the environment variables. For example, to read API keys from standard input:
+```shell
+read -s HARPIA_OPENAI_API_KEY; export HARPIA_OPENAI_API_KEY=$HARPIA_OPENAI_API_KEY;
+```
