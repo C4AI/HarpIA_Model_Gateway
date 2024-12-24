@@ -30,7 +30,7 @@ provider backend server for the
   ```
 
 - Test an answer provider by interacting with it on a terminal
-  (replace `'./config/config1.py` with the path to your configuration file,
+  (replace `./config/config1.py` with the path to your configuration file,
   and replace `ECHO` with the name of the desired model as specified in the
   configuration):
 
