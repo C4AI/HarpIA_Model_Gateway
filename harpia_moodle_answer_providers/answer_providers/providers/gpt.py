@@ -59,7 +59,7 @@ class GPTAnswerProvider(BaseAnswerProvider[ParameterSpec]):
     ) -> list[ChatCompletionMessageParam]:
         messages: list[ChatCompletionMessageParam] = []
 
-        if custom_system_prompt is not None:
+        if custom_system_prompt:
             system_prompt = custom_system_prompt
         else:
             system_prompt = self.get_default_system_prompt()

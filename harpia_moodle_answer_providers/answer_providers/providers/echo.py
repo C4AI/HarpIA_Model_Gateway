@@ -25,7 +25,7 @@ class EchoAnswerProvider(BaseAnswerProvider[ParameterSpec]):
         history: list[str] | None = None,
         custom_system_prompt: str | None = None,
     ) -> Response:
-        if custom_system_prompt is not None:
+        if custom_system_prompt:
             msg = "{self.__class__} does not support system prompts"
             raise ValueError(msg)
         text = message
