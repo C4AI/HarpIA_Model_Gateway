@@ -37,3 +37,10 @@ provider backend server for the
   ```shell
   docker run --rm -it --name harpia-gateway -v './config/config1.py':/cfg.py harpia-model-gateway:1.0 --config=/cfg.py cli --provider='ECHO'
   ```
+
+- Start the server
+  (replace `./config/config1.py` with the path to your configuration file, optionally replace all instances of `42774` with the desired port):
+
+  ```shell
+  docker run --rm -it --name harpia-gateway -v './config/config1.py':/cfg.py -p 42774:42774 harpia-model-gateway:1.0 --config=/cfg.py server --host=0.0.0.0 --port=42774 --debug
+  ```
