@@ -5,7 +5,7 @@ try:
 except ImportError:  # for Python < 3.12
     from overrides import override
 
-from harpia_moodle_answer_providers.answer_providers.providers.base import (
+from harpia_model_gateway.answer_providers.providers.base import (
     BaseAnswerProvider,
     Response,
 )
@@ -67,11 +67,11 @@ class GPTAnswerProvider(BaseAnswerProvider[ParameterSpec]):
             messages.append({"role": "system", "content": system_prompt})
 
         from_user = True
-        for message in history:
+        for msg in history:
             messages.append(
                 {
                     "role": "user" if from_user else "assistant",
-                    "content": self.settings["system_prompt"],
+                    "content": msg,
                 }
             )
             from_user = not from_user

@@ -7,7 +7,7 @@ except ImportError:  # for Python < 3.12
 
 import requests
 
-from harpia_moodle_answer_providers.answer_providers.providers.base import (
+from harpia_model_gateway.answer_providers.providers.base import (
     BaseAnswerProvider,
     Response,
 )
@@ -27,10 +27,7 @@ class OllamaAnswerProvider(BaseAnswerProvider[ParameterSpec]):
         self.settings["extra_ollama_args"] = (
             self.settings.get("extra_ollama_args", None) or {}
         )
-        requests.post(
-            self.settings["ollama_address"] + "/pull",
-            json={"model": self.settings["model"]},
-        )
+        self.pulled = False
 
     @override
     def answer(
@@ -39,6 +36,12 @@ class OllamaAnswerProvider(BaseAnswerProvider[ParameterSpec]):
         history: list[str] | None = None,
         custom_system_prompt: str | None = None,
     ) -> Response:
+        if not self.pulled:
+            requests.post(
+                self.settings["ollama_address"] + "/pull",
+                json={"model": self.settings["model"]},
+            )
+            self.pulled = True
         message_list = self.build_message_list(
             message, history or [], custom_system_prompt
         )
@@ -72,15 +75,15 @@ class OllamaAnswerProvider(BaseAnswerProvider[ParameterSpec]):
             messages.append({"role": "system", "content": system_prompt})
 
         from_user = True
-        for message in history:
+        for msg in history:
             messages.append(
                 {
                     "role": "user" if from_user else "assistant",
-                    "content": self.settings["system_prompt"],
+                    "content": msg,
                 }
             )
             from_user = not from_user
-        messages.append({"role": "user", "content": message})
+        messages.append({"role": "user", "content": msg})
         return messages
 
     def get_default_system_prompt(self) -> str:

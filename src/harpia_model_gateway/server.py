@@ -6,12 +6,12 @@ from pathlib import Path
 from flask import Flask, jsonify, request
 from waitress import serve
 
-from harpia_moodle_answer_providers.answer_providers.providers.base import (
+from harpia_model_gateway.answer_providers.providers.base import (
     BaseAnswerProvider,
     Request,
     Response,
 )
-from harpia_moodle_answer_providers.cfg_reader import load_configuration
+from harpia_model_gateway.cfg_reader import load_configuration
 
 
 class AnswerProviderService:
@@ -98,6 +98,7 @@ class AnswerProviderService:
 
         import colorama  # noqa: F401
 
+        history = []
         while True:
             try:
                 question = input(colorama.Style.RESET_ALL + colorama.Style.DIM + "> ")
@@ -105,8 +106,14 @@ class AnswerProviderService:
                 return
             if not question:
                 continue
-            req = Request(text=question, answer_provider=answer_provider, history=[])
+            req = Request(
+                text=question,
+                answer_provider=answer_provider,
+                history=history,
+                system_prompt="",
+            )
             resp = self._send_message(req)
+            history += [question, resp.text]
             print(
                 colorama.Style.RESET_ALL + colorama.Style.BRIGHT + f"\n{resp.text}\n\n"
             )

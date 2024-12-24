@@ -2,7 +2,7 @@ import argparse
 import logging
 from pathlib import Path
 
-from harpia_moodle_answer_providers.server import AnswerProviderService
+from harpia_model_gateway.server import AnswerProviderService
 
 logging.basicConfig()
 

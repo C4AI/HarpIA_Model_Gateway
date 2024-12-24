@@ -6,7 +6,7 @@ except ImportError:  # for Python < 3.12
     from overrides import override
 
 
-from harpia_moodle_answer_providers.answer_providers.providers.base import (
+from harpia_model_gateway.answer_providers.providers.base import (
     BaseAnswerProvider,
     Response,
 )
