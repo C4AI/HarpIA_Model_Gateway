@@ -83,7 +83,7 @@ class OllamaAnswerProvider(BaseAnswerProvider[ParameterSpec]):
                 }
             )
             from_user = not from_user
-        messages.append({"role": "user", "content": msg})
+        messages.append({"role": "user", "content": message})
         return messages
 
     def get_default_system_prompt(self) -> str:
