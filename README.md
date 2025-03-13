@@ -25,6 +25,7 @@ classes are implemented:
 
 [Installation instructions](../../wiki/Installation-instructions)
 
+[Usage instructions](../../wiki/Usage-instructions)
 
 
 
